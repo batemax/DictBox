@@ -47,7 +47,7 @@ db hello
 
 1. 下载或克隆本仓库
    ```bash
-   git clone https://github.com/your-username/DictBox.git
+   git clone https://github.com/batemax/DictBox.git
    ```
 2. 打开 Chrome，地址栏输入 `chrome://extensions`
 3. 开启右上角 **开发者模式** 开关
@@ -148,7 +148,7 @@ Translation results appear instantly in the dropdown — no new tabs, no page sw
 
 1. Clone this repository
    ```bash
-   git clone https://github.com/your-username/DictBox.git
+   git clone https://github.com/batemax/DictBox.git
    ```
 2. Open Chrome → navigate to `chrome://extensions`
 3. Enable **Developer mode** (top-right toggle)
@@ -240,7 +240,7 @@ This is a pure JavaScript Chrome extension with no build step required.
 
 ```bash
 # Clone
-git clone https://github.com/your-username/DictBox.git
+git clone https://github.com/batemax/DictBox.git
 
 # Load in Chrome
 # chrome://extensions → Developer mode → Load unpacked → select DictBox/
