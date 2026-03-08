@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "DictBox - 快速字典翻译",
+  "version": "1.0.0",
+  "description": "在地址栏输入 db + 空格 + 单词，即刻获取翻译结果。支持 MyMemory、Google、Microsoft 翻译引擎。",
+  "permissions": ["storage"],
+  "omnibox": {
+    "keyword": "db"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
