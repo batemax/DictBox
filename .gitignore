@@ -12,6 +12,7 @@ Thumbs.db
 *.swo
 
 # Build & Package
+dist/
 *.zip
 *.crx
 *.pem

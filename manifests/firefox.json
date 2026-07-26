@@ -1,0 +1,14 @@
+{
+  "background": {
+    "scripts": [
+      "src/background/index.js"
+    ],
+    "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "dictbox@batemax.dev",
+      "strict_min_version": "121.0"
+    }
+  }
+}

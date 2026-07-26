@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DictBox 设置</title>
   <link rel="stylesheet" href="options.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -26,7 +25,7 @@
             <p class="subtitle">快速字典翻译插件设置</p>
           </div>
         </div>
-        <span class="version">v1.0.0</span>
+        <span class="version">v2.0.0</span>
       </header>
 
       <!-- Usage Guide Card -->
@@ -67,6 +66,10 @@
                 <option value="mymemory">MyMemory（免费，默认）</option>
                 <option value="google">Google Translate</option>
                 <option value="microsoft">Microsoft Dictionary</option>
+                <option value="openai">ChatGPT / OpenAI</option>
+                <option value="gemini">Gemini</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="claude">Claude</option>
               </select>
               <span class="select-arrow">▾</span>
             </div>
@@ -121,6 +124,101 @@
               <input type="text" id="microsoftRegion" placeholder="eastasia">
             </div>
           </div>
+
+          <div id="openai-config" class="provider-config" style="display: none;">
+            <div class="form-group">
+              <label for="openaiApiKey">OpenAI API Key</label>
+              <div class="input-with-toggle">
+                <input type="password" id="openaiApiKey" autocomplete="off" placeholder="sk-...">
+                <button type="button" class="toggle-visibility" data-target="openaiApiKey" title="显示/隐藏">👁</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="openaiModel">模型</label>
+              <div class="select-wrapper">
+                <select id="openaiModel"></select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="openaiBaseUrl">API 地址</label>
+              <input type="url" id="openaiBaseUrl" placeholder="https://api.openai.com/v1">
+              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
+            </div>
+          </div>
+
+          <div id="gemini-config" class="provider-config" style="display: none;">
+            <div class="form-group">
+              <label for="geminiApiKey">Gemini API Key</label>
+              <div class="input-with-toggle">
+                <input type="password" id="geminiApiKey" autocomplete="off" placeholder="AIza...">
+                <button type="button" class="toggle-visibility" data-target="geminiApiKey" title="显示/隐藏">👁</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="geminiModel">模型</label>
+              <div class="select-wrapper">
+                <select id="geminiModel"></select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="geminiBaseUrl">API 地址</label>
+              <input type="url" id="geminiBaseUrl" placeholder="https://generativelanguage.googleapis.com/v1beta">
+              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
+            </div>
+          </div>
+
+          <div id="deepseek-config" class="provider-config" style="display: none;">
+            <div class="form-group">
+              <label for="deepseekApiKey">DeepSeek API Key</label>
+              <div class="input-with-toggle">
+                <input type="password" id="deepseekApiKey" autocomplete="off" placeholder="sk-...">
+                <button type="button" class="toggle-visibility" data-target="deepseekApiKey" title="显示/隐藏">👁</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="deepseekModel">模型</label>
+              <div class="select-wrapper">
+                <select id="deepseekModel"></select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="deepseekBaseUrl">API 地址</label>
+              <input type="url" id="deepseekBaseUrl" placeholder="https://api.deepseek.com">
+              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
+            </div>
+          </div>
+
+          <div id="claude-config" class="provider-config" style="display: none;">
+            <div class="form-group">
+              <label for="claudeApiKey">Claude API Key</label>
+              <div class="input-with-toggle">
+                <input type="password" id="claudeApiKey" autocomplete="off" placeholder="sk-ant-...">
+                <button type="button" class="toggle-visibility" data-target="claudeApiKey" title="显示/隐藏">👁</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="claudeModel">模型</label>
+              <div class="select-wrapper">
+                <select id="claudeModel"></select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="claudeBaseUrl">API 地址</label>
+              <input type="url" id="claudeBaseUrl" placeholder="https://api.anthropic.com/v1">
+              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label" for="enableFallback">
+              <input type="checkbox" id="enableFallback">
+              服务失败时降级到 MyMemory
+            </label>
+          </div>
         </div>
       </section>
 
@@ -171,12 +269,12 @@
 
       <!-- Footer -->
       <footer class="footer">
-        <p>DictBox v1.0.0 · 在地址栏中输入 <kbd>db</kbd> 开始翻译</p>
+        <p>DictBox v2.0.0 · 支持 Chromium 与 Firefox</p>
       </footer>
     </div>
   </div>
 
-  <script src="options.js"></script>
+  <script type="module" src="src/options/index.js"></script>
 </body>
 
 </html>

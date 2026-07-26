@@ -1,0 +1,16 @@
+{
+  "name": "dictbox",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "build": "node scripts/build.mjs",
+    "build:chromium": "node scripts/build.mjs chromium",
+    "build:firefox": "node scripts/build.mjs firefox",
+    "check": "npm test && npm run build"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
