@@ -31,7 +31,7 @@ for (const target of targets) {
   await cp(resolve(root, 'src'), resolve(outputDir, 'src'), { recursive: true });
   await cp(resolve(root, 'icons'), resolve(outputDir, 'icons'), { recursive: true });
 
-  for (const file of ['options.html', 'options.css', 'LICENSE']) {
+  for (const file of ['popup.html', 'result.html', 'options.html', 'options.css', 'LICENSE']) {
     await cp(resolve(root, file), resolve(outputDir, file));
   }
 

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>查词 · DictBox</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body class="result-page">
+  <header class="result-shell site-header">
+    <a class="brand" href="result.html" aria-label="返回 DictBox 查询首页">
+      <img class="brand-icon" src="icons/icon48.png" width="34" height="34" alt="">
+      <span class="brand-name">DictBox</span>
+    </a>
+    <button id="result-settings" class="nav-button" type="button">插件设置</button>
+  </header>
+  <main class="result-shell result-main">
+    <section class="result-search-hero" aria-labelledby="result-search-title">
+      <div>
+        <p class="eyebrow">Dictionary</p>
+        <h1 id="result-search-title">查询单词或短语</h1>
+      </div>
+      <form id="result-search" class="result-search">
+        <label class="visually-hidden" for="result-query">查询单词或短语</label>
+        <div class="search-form">
+          <input id="result-query" class="search-input" type="text" placeholder="输入单词或短语" autocomplete="off" spellcheck="false" maxlength="80">
+          <button class="primary-button" type="submit">查询</button>
+        </div>
+      </form>
+      <p class="result-omnibox-tip">在 Chrome 地址栏输入 <strong>db + 空格 + 查询内容</strong>，可以直接获得精简释义。</p>
+    </section>
+    <div id="result-status" aria-live="polite"></div>
+    <div id="result-content"></div>
+  </main>
+  <script type="module" src="src/result/index.js"></script>
+</body>
+</html>

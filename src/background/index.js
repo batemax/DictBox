@@ -30,6 +30,7 @@ let settingsReady = loadSettings()
 let debounceTimer = null;
 let activeController = null;
 let activeQuery = '';
+let lastCompletedQuery = '';
 let requestId = 0;
 
 api.storage.onChanged.addListener((changes) => {
@@ -50,8 +51,9 @@ function updateDefaultSuggestion(description) {
 }
 
 function showSuggestions(suggest, result, query) {
+  const provider = escapeXml(result?.provider || settings.provider || 'DictBox');
   if (isFirefox) {
-    const description = formatFirefoxSummary(result, query);
+    const description = `${provider} · ${formatFirefoxSummary(result, query)}`;
     // Firefox does not repaint an asynchronously updated default suggestion.
     // Submit one compact real suggestion instead. The invisible word joiner keeps
     // it distinct from the current input without exposing an internal result ID.
@@ -60,8 +62,44 @@ function showSuggestions(suggest, result, query) {
   }
 
   const suggestions = formatSuggestions(result, query, { useMarkup: !isFirefox });
-  updateDefaultSuggestion(suggestions[0].description);
+  updateDefaultSuggestion(`<dim>${provider}</dim> · ${suggestions[0].description}`);
   suggest(suggestions.slice(1));
+}
+
+async function lookup(query, context = {}) {
+  await settingsReady;
+  return lookupWithSettings(query, settings, context);
+}
+
+export function resolveLookupRequest(query, selectedSettings) {
+  const resolved = resolveLanguagePair(query, selectedSettings.targetLang);
+  const usesAutomaticSource = !selectedSettings.sourceLang || selectedSettings.sourceLang === 'auto';
+  const sourceLanguage = usesAutomaticSource ? resolved.from : selectedSettings.sourceLang;
+  const targetLanguage = usesAutomaticSource ? resolved.to : selectedSettings.targetLang;
+  return { query, sourceLanguage, targetLanguage };
+}
+
+function lookupWithSettings(query, selectedSettings, context = {}) {
+  return translationService.lookup(
+    resolveLookupRequest(query, selectedSettings),
+    selectedSettings,
+    context,
+  );
+}
+
+function publicError(error) {
+  const messages = {
+    NO_RESULT: error.message,
+    MISSING_API_KEY: '请先在插件设置中填写 API Key。',
+    AUTHENTICATION_FAILED: 'API Key 验证失败，请检查后重试。',
+    RATE_LIMITED: '服务请求过于频繁，请稍后重试。',
+    PROVIDER_UNAVAILABLE: '暂时无法连接查询服务，请检查网络后重试。',
+    INVALID_MODEL_OUTPUT: '服务返回了无法识别的释义，请重试。',
+  };
+  return {
+    code: error?.code || 'LOOKUP_FAILED',
+    message: messages[error?.code] || '查询失败，请稍后重试。',
+  };
 }
 
 api.omnibox.onInputStarted.addListener(() => {
@@ -90,7 +128,7 @@ api.omnibox.onInputChanged.addListener((text, suggest) => {
   activeController?.abort();
   activeQuery = query;
 
-  if (query.length < 2) {
+  if (query.length < 1) {
     activeQuery = '';
     updateDefaultSuggestion(
       query ? 'DictBox - 继续输入...' : 'DictBox - 输入单词或短语进行查询...',
@@ -105,24 +143,21 @@ api.omnibox.onInputChanged.addListener((text, suggest) => {
     debounceTimer = null;
     const controller = new AbortController();
     activeController = controller;
-    await settingsReady;
-    const { from, to } = resolveLanguagePair(query, settings.targetLang);
     try {
-      const result = await translationService.lookup(
-        { query, sourceLanguage: from, targetLanguage: to },
-        settings,
-        { signal: controller.signal },
-      );
-      if (currentRequestId === requestId) showSuggestions(suggest, result, query);
+      const result = await lookup(query, { signal: controller.signal });
+      if (currentRequestId === requestId) {
+        lastCompletedQuery = query;
+        showSuggestions(suggest, result, query);
+      }
     } catch (error) {
       if (currentRequestId !== requestId) return;
-      updateDefaultSuggestion(`查询失败: ${escapeXml(error.message).slice(0, 80)}`);
+      updateDefaultSuggestion(`查询失败: ${escapeXml(publicError(error).message).slice(0, 80)}`);
       suggest([]);
     } finally {
       if (activeController === controller) activeController = null;
       if (currentRequestId === requestId) activeQuery = '';
     }
-  }, 600);
+  }, 500);
 });
 
 api.omnibox.onInputCancelled.addListener(() => {
@@ -132,6 +167,34 @@ api.omnibox.onInputCancelled.addListener(() => {
   activeController?.abort();
 });
 
-api.omnibox.onInputEntered.addListener(() => {
-  // V2 keeps the interaction inside Omnibox; detailed-result navigation is deferred.
+api.omnibox.onInputEntered.addListener((content) => {
+  const selectedSuggestion = String(content).startsWith('dictbox-result-');
+  const query = (selectedSuggestion ? lastCompletedQuery : content).trim();
+  if (!query) return;
+  const url = api.runtime.getURL(`result.html?word=${encodeURIComponent(query)}`);
+  void api.tabs.create({ url });
+});
+
+api.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (!['dictbox:lookup', 'dictbox:test-connection'].includes(message?.type)) return false;
+  if (message.type === 'dictbox:test-connection') {
+    const testSettings = { ...settings, ...message.settings };
+    lookupWithSettings('world', testSettings)
+      .then((result) => sendResponse({ ok: true, result }))
+      .catch((error) => sendResponse({ ok: false, error: publicError(error) }));
+    return true;
+  }
+  const query = String(message.query ?? '').trim();
+  if (!query) {
+    sendResponse({
+      ok: false,
+      error: { code: 'EMPTY_QUERY', message: '请输入要查询的单词。' },
+    });
+    return false;
+  }
+
+  lookup(query)
+    .then((result) => sendResponse({ ok: true, result }))
+    .catch((error) => sendResponse({ ok: false, error: publicError(error) }));
+  return true;
 });

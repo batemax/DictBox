@@ -1,56 +1,42 @@
 # Chrome Web Store Listing
 
-## Extension Name
-DictBox - 地址栏字典翻译
+> 发布说明：V3 默认提供无需 API Key 的免费查询，并支持用户配置自己的模型服务。
 
-## Short Description (132 characters max)
-在地址栏输入 db + 单词即刻翻译。支持词性标注、多义词展示，可选 MyMemory / Google / Microsoft Dictionary 引擎。
+## Extension Name
+
+DictBox - 地址栏与弹窗查词
+
+## Short Description
+
+在 Chrome 地址栏或工具栏弹窗中快速查词，查看词性、释义和例句，并在内部结果页继续阅读。
 
 ## Detailed Description
 
-### DictBox — 最快的 Chrome 翻译方式
+DictBox 让查词停留在当前浏览思路中：
 
-不需要打开翻译网站，不需要切换标签页。只需在地址栏输入 db + 空格 + 单词，翻译结果立即显示。
+- 地址栏输入 `db` + 空格 + 单词，立即查看精简释义。
+- 按 Enter 在扩展内部打开完整释义，不跳转第三方网站。
+- 点击工具栏图标，在紧凑弹窗中查询、复制和重试。
+- 查看最近 5 条本地查询记录，支持单条删除、清空和撤销。
+- 安装后可直接使用免费查询，无需注册或配置密钥。
+- 配置 OpenAI、Gemini、Claude、DeepSeek 或 OpenAI 兼容服务。
+- 自定义原语言和目标语言。
 
-🔹 核心功能：
-• 地址栏输入 db hello 即可翻译
-• 显示词性标注（adj. / n. / v. / adv.）
-• 多含义分行展示，按匹配度排序
-• 智能识别中日韩俄等语言
-• 默认翻译为中文，可自定义目标语言
+隐私与安全：
 
-🔹 翻译引擎：
-• MyMemory — 免费，无需注册，开箱即用
-• Google Translate — 需要 API Key
-• Microsoft Dictionary — 词性标注最完整，Azure 免费额度每月 200 万字符
-
-🔹 性能优化：
-• 内存缓存 + 本地持久化，翻译过的词秒出结果
-• 600ms 智能防抖，减少无效请求
-• 主引擎失败自动降级到 MyMemory
-
-🔹 隐私安全：
-• 不收集任何用户数据
-• 所有 API Key 仅存储在本地
-• 无后台追踪，无广告
-• 完全开源
-
-### 使用方法：
-1. 在地址栏输入 db
-2. 按空格或 Tab 键
-3. 输入单词或短语
-4. 翻译结果自动显示在下拉列表
-
-### 设置：
-右键插件图标 → 选项，可配置翻译引擎、API Key 和目标语言。
-
----
+- API Key 仅保存在当前设备，默认遮罩显示。
+- 最近查询仅存储在本地，不提供云同步或账号系统。
+- 查询结果经过结构校验并使用安全文本渲染。
+- 使用真实服务时，查询文本会发送到用户选择的模型服务。
 
 ## Category
+
 Productivity
 
 ## Language
-Chinese (Simplified) / English
+
+Chinese (Simplified)
 
 ## Tags
-翻译, 字典, dictionary, translate, omnibox
+
+翻译, 字典, dictionary, translate, omnibox, Chrome extension

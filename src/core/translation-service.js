@@ -23,20 +23,22 @@ export class TranslationService {
   }
 
   async lookup(request, settings, context = {}) {
-    const key = this.createCacheKey(settings.provider, settings, request);
+    const provider = settings.useMockData ? 'mock' : settings.provider;
+    const key = this.createCacheKey(provider, settings, request);
     const memoryResult = this.memoryCache.get(key);
-    if (memoryResult) return memoryResult;
+    if (memoryResult) return this.withRequestMetadata(memoryResult, request, provider);
 
     const persistentResult = await this.persistentCache.get(key);
     if (persistentResult) {
       this.memoryCache.set(key, persistentResult);
-      return persistentResult;
+      return this.withRequestMetadata(persistentResult, request, provider);
     }
 
     let result;
     let usedFallback = false;
+    let actualProvider = provider;
     try {
-      result = await this.providerLookup(settings.provider, request, settings, context);
+      result = await this.providerLookup(provider, request, settings, context);
     } catch (error) {
       const wasCancelled =
         context.signal?.aborted ||
@@ -46,7 +48,8 @@ export class TranslationService {
         !wasCancelled &&
         settings.enableFallback &&
         settings.fallbackProvider &&
-        settings.fallbackProvider !== settings.provider &&
+        provider !== 'mock' &&
+        settings.fallbackProvider !== provider &&
         !['AUTHENTICATION_FAILED', 'MISSING_API_KEY'].includes(error.code);
       if (!canFallback) throw error;
       result = await this.providerLookup(
@@ -56,7 +59,10 @@ export class TranslationService {
         context,
       );
       usedFallback = true;
+      actualProvider = settings.fallbackProvider;
     }
+
+    result = this.withRequestMetadata(result, request, actualProvider);
 
     if (!usedFallback) {
       this.memoryCache.set(key, result);
@@ -65,5 +71,16 @@ export class TranslationService {
       });
     }
     return result;
+  }
+
+  withRequestMetadata(result, request, provider) {
+    return {
+      ...result,
+      query: result?.query || request.query,
+      word: result?.word || result?.query || request.query,
+      sourceLanguage: result?.sourceLanguage || request.sourceLanguage,
+      targetLanguage: result?.targetLanguage || request.targetLanguage,
+      provider: result?.provider || result?.translations?.[0]?.source || provider,
+    };
   }
 }

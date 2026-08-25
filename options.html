@@ -1,280 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DictBox 设置</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>插件设置 · DictBox</title>
   <link rel="stylesheet" href="options.css">
 </head>
+<body class="settings-page">
+  <header class="settings-shell site-header">
+    <span class="brand">
+      <img class="brand-icon" src="icons/icon48.png" width="34" height="34" alt="">
+      <span class="brand-name">DictBox</span>
+    </span>
+    <button id="close-settings" class="nav-button" type="button">关闭设置</button>
+  </header>
 
-<body>
-  <div class="app">
-    <!-- Animated background -->
-    <div class="bg-orb bg-orb-1"></div>
-    <div class="bg-orb bg-orb-2"></div>
-    <div class="bg-orb bg-orb-3"></div>
+  <main class="settings-shell settings-main">
+    <p class="eyebrow">Options</p>
+    <h1 class="page-title">插件设置</h1>
+    <p class="page-intro">选择查询服务、填写必要配置并设置翻译语言。</p>
 
-    <div class="container">
-      <!-- Header -->
-      <header class="header">
-        <div class="logo">
-          <img src="icons/icon48.png" alt="DictBox" class="logo-icon">
-          <div>
-            <h1>DictBox</h1>
-            <p class="subtitle">快速字典翻译插件设置</p>
-          </div>
+    <form id="settings-form" novalidate>
+      <section class="settings-section" aria-labelledby="provider-heading">
+        <h2 id="provider-heading">查询服务</h2>
+        <p class="section-note">免费查询无需配置；也可以使用自己的模型 API 获得更完整的词典结果。</p>
+        <div class="provider-grid" role="radiogroup" aria-label="选择查询服务">
+          <div class="provider-option"><input id="provider-mymemory" name="provider" type="radio" value="mymemory"><label for="provider-mymemory"><strong>免费查询</strong><small>无需 API Key</small></label></div>
+          <div class="provider-option"><input id="provider-deepseek" name="provider" type="radio" value="deepseek"><label for="provider-deepseek"><strong>DeepSeek</strong><small data-provider-status="deepseek"></small></label></div>
+          <div class="provider-option"><input id="provider-openai" name="provider" type="radio" value="openai"><label for="provider-openai"><strong>OpenAI</strong><small data-provider-status="openai"></small></label></div>
+          <div class="provider-option"><input id="provider-gemini" name="provider" type="radio" value="gemini"><label for="provider-gemini"><strong>Gemini</strong><small data-provider-status="gemini"></small></label></div>
+          <div class="provider-option"><input id="provider-claude" name="provider" type="radio" value="claude"><label for="provider-claude"><strong>Claude</strong><small data-provider-status="claude"></small></label></div>
+          <div class="provider-option"><input id="provider-custom" name="provider" type="radio" value="custom"><label for="provider-custom"><strong>自定义</strong><small data-provider-status="custom"></small></label></div>
         </div>
-        <span class="version">v2.0.0</span>
-      </header>
 
-      <!-- Usage Guide Card -->
-      <section class="card card-guide">
-        <div class="card-header">
-          <span class="card-icon">💡</span>
-          <h2>使用方法</h2>
+        <div id="free-provider-note" class="provider-summary" hidden>
+          <strong>已选择免费查询</strong>
+          <p>无需注册或填写密钥，保存后即可开始中英双向查询。免费服务返回精简翻译结果。</p>
         </div>
-        <div class="card-body">
-          <div class="usage-steps">
-            <div class="step">
-              <span class="step-num">1</span>
-              <span>在地址栏输入 <kbd>db</kbd></span>
-            </div>
-            <div class="step">
-              <span class="step-num">2</span>
-              <span>按 <kbd>空格</kbd> 或 <kbd>Tab</kbd></span>
-            </div>
-            <div class="step">
-              <span class="step-num">3</span>
-              <span>输入需要翻译的单词或短语</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <!-- Translation Engine Card -->
-      <section class="card">
-        <div class="card-header">
-          <span class="card-icon">⚙️</span>
-          <h2>翻译引擎</h2>
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label for="provider">选择翻译服务</label>
-            <div class="select-wrapper">
-              <select id="provider">
-                <option value="mymemory">MyMemory（免费，默认）</option>
-                <option value="google">Google Translate</option>
-                <option value="microsoft">Microsoft Dictionary</option>
-                <option value="openai">ChatGPT / OpenAI</option>
-                <option value="gemini">Gemini</option>
-                <option value="deepseek">DeepSeek</option>
-                <option value="claude">Claude</option>
-              </select>
-              <span class="select-arrow">▾</span>
+        <div id="provider-config" class="provider-config">
+          <div class="form-grid">
+            <div class="form-field full">
+              <label class="form-label" for="api-key">API Key</label>
+              <div class="password-wrap">
+                <input id="api-key" class="field-input" type="password" autocomplete="off">
+                <button id="password-toggle" class="password-toggle" type="button" aria-pressed="false">显示</button>
+              </div>
+              <p id="api-key-error" class="field-error" hidden></p>
+            </div>
+            <div class="form-field full">
+              <label class="form-label" for="model">模型</label>
+              <input id="model" class="field-input" type="text" list="model-options">
+              <datalist id="model-options"></datalist>
+              <p id="model-error" class="field-error" hidden></p>
             </div>
           </div>
 
-          <!-- MyMemory specific -->
-          <div id="mymemory-config" class="provider-config">
-            <div class="form-group">
-              <label for="mymemoryEmail">
-                Email（可选）
-                <span class="label-hint">提供 email 可将免费额度从 5,000 提升至 50,000 字符/天</span>
-              </label>
-              <input type="email" id="mymemoryEmail" placeholder="your@email.com">
+          <details class="advanced-settings">
+            <summary>高级设置</summary>
+            <div class="form-field">
+              <label class="form-label" for="endpoint">API 服务地址</label>
+              <input id="endpoint" class="field-input" type="url">
+              <p class="field-help">只有自定义部署或代理服务需要修改。</p>
+              <p id="endpoint-error" class="field-error" hidden></p>
             </div>
-          </div>
+          </details>
 
-          <!-- Google specific -->
-          <div id="google-config" class="provider-config" style="display: none;">
-            <div class="form-group">
-              <label for="googleApiKey">
-                Google API Key
-                <span class="label-hint">从 Google Cloud Console 获取</span>
-              </label>
-              <div class="input-with-toggle">
-                <input type="password" id="googleApiKey" placeholder="AIzaSy...">
-                <button type="button" class="toggle-visibility" data-target="googleApiKey" title="显示/隐藏">
-                  👁
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Microsoft specific -->
-          <div id="microsoft-config" class="provider-config" style="display: none;">
-            <div class="form-group">
-              <label for="microsoftApiKey">
-                Microsoft API Key
-                <span class="label-hint">从 Azure Portal 获取 Cognitive Services 密钥</span>
-              </label>
-              <div class="input-with-toggle">
-                <input type="password" id="microsoftApiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
-                <button type="button" class="toggle-visibility" data-target="microsoftApiKey" title="显示/隐藏">
-                  👁
-                </button>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="microsoftRegion">
-                Azure Region（可选）
-                <span class="label-hint">如 eastasia, westus2 等</span>
-              </label>
-              <input type="text" id="microsoftRegion" placeholder="eastasia">
-            </div>
-          </div>
-
-          <div id="openai-config" class="provider-config" style="display: none;">
-            <div class="form-group">
-              <label for="openaiApiKey">OpenAI API Key</label>
-              <div class="input-with-toggle">
-                <input type="password" id="openaiApiKey" autocomplete="off" placeholder="sk-...">
-                <button type="button" class="toggle-visibility" data-target="openaiApiKey" title="显示/隐藏">👁</button>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="openaiModel">模型</label>
-              <div class="select-wrapper">
-                <select id="openaiModel"></select>
-                <span class="select-arrow">▾</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="openaiBaseUrl">API 地址</label>
-              <input type="url" id="openaiBaseUrl" placeholder="https://api.openai.com/v1">
-              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
-            </div>
-          </div>
-
-          <div id="gemini-config" class="provider-config" style="display: none;">
-            <div class="form-group">
-              <label for="geminiApiKey">Gemini API Key</label>
-              <div class="input-with-toggle">
-                <input type="password" id="geminiApiKey" autocomplete="off" placeholder="AIza...">
-                <button type="button" class="toggle-visibility" data-target="geminiApiKey" title="显示/隐藏">👁</button>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="geminiModel">模型</label>
-              <div class="select-wrapper">
-                <select id="geminiModel"></select>
-                <span class="select-arrow">▾</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="geminiBaseUrl">API 地址</label>
-              <input type="url" id="geminiBaseUrl" placeholder="https://generativelanguage.googleapis.com/v1beta">
-              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
-            </div>
-          </div>
-
-          <div id="deepseek-config" class="provider-config" style="display: none;">
-            <div class="form-group">
-              <label for="deepseekApiKey">DeepSeek API Key</label>
-              <div class="input-with-toggle">
-                <input type="password" id="deepseekApiKey" autocomplete="off" placeholder="sk-...">
-                <button type="button" class="toggle-visibility" data-target="deepseekApiKey" title="显示/隐藏">👁</button>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="deepseekModel">模型</label>
-              <div class="select-wrapper">
-                <select id="deepseekModel"></select>
-                <span class="select-arrow">▾</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="deepseekBaseUrl">API 地址</label>
-              <input type="url" id="deepseekBaseUrl" placeholder="https://api.deepseek.com">
-              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
-            </div>
-          </div>
-
-          <div id="claude-config" class="provider-config" style="display: none;">
-            <div class="form-group">
-              <label for="claudeApiKey">Claude API Key</label>
-              <div class="input-with-toggle">
-                <input type="password" id="claudeApiKey" autocomplete="off" placeholder="sk-ant-...">
-                <button type="button" class="toggle-visibility" data-target="claudeApiKey" title="显示/隐藏">👁</button>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="claudeModel">模型</label>
-              <div class="select-wrapper">
-                <select id="claudeModel"></select>
-                <span class="select-arrow">▾</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="claudeBaseUrl">API 地址</label>
-              <input type="url" id="claudeBaseUrl" placeholder="https://api.anthropic.com/v1">
-              <p class="form-hint">API Key 将发送至此地址，请确认服务可信。</p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label" for="enableFallback">
-              <input type="checkbox" id="enableFallback">
-              服务失败时降级到 MyMemory
-            </label>
+          <div class="connection-row">
+            <button id="test-connection" class="ghost-button" type="button">测试并保存</button>
+            <div id="connection-feedback" class="inline-feedback" aria-live="polite"></div>
           </div>
         </div>
       </section>
 
-      <!-- Target Language Card -->
-      <section class="card">
-        <div class="card-header">
-          <span class="card-icon">🌐</span>
-          <h2>目标语言</h2>
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label for="targetLang">默认翻译结果语言</label>
-            <div class="select-wrapper">
-              <select id="targetLang">
-                <option value="zh-CN">中文（简体）</option>
-                <option value="zh-TW">中文（繁体）</option>
-                <option value="en">English</option>
-                <option value="ja">日本語</option>
-                <option value="ko">한국어</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-                <option value="es">Español</option>
-                <option value="pt">Português</option>
-                <option value="ru">Русский</option>
-                <option value="ar">العربية</option>
-                <option value="th">ไทย</option>
-                <option value="vi">Tiếng Việt</option>
-              </select>
-              <span class="select-arrow">▾</span>
-            </div>
-            <p class="form-hint">当输入的文字语言与目标语言相同时，将自动翻译为英文。</p>
+      <section class="settings-section" aria-labelledby="language-heading">
+        <h2 id="language-heading">查询语言</h2>
+        <p class="section-note">建议保持自动检测；输入中文且目标为中文时会自动翻译成英语。</p>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="sourceLang">原语言</label>
+            <select id="sourceLang" class="field-select"></select>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="targetLang">目标语言</label>
+            <select id="targetLang" class="field-select"></select>
           </div>
         </div>
+        <p id="language-warning" class="inline-feedback error" aria-live="polite"></p>
       </section>
 
-      <!-- Actions -->
-      <div class="actions">
-        <button id="btn-reset" class="btn btn-secondary">
-          <span>↺</span> 恢复默认
-        </button>
-        <button id="btn-save" class="btn btn-primary">
-          <span>✓</span> 保存设置
-        </button>
+      <aside class="privacy-note">
+        <strong>隐私说明</strong>
+        <p>普通设置可通过浏览器同步；API Key 仅保存在当前设备。查询文本会发送到你选择的服务商。</p>
+      </aside>
+
+      <div class="settings-actions sticky-actions">
+        <button id="cancel-return" class="text-link" type="button">取消并关闭</button>
+        <div class="action-group">
+          <button id="btn-save" class="primary-button" type="submit">保存设置</button>
+        </div>
       </div>
+      <div id="save-feedback" class="save-feedback" aria-live="polite"></div>
+    </form>
 
-      <!-- Toast notification -->
-      <div id="toast" class="toast" aria-live="polite"></div>
+    <section class="danger-zone" aria-labelledby="danger-heading">
+      <div>
+        <h2 id="danger-heading">重置与清除</h2>
+        <p>恢复全部默认设置会同时删除所有已保存的 API Key。</p>
+      </div>
+      <button id="btn-reset" class="danger-button" type="button">恢复全部默认</button>
+    </section>
+  </main>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <p>DictBox v2.0.0 · 支持 Chromium 与 Firefox</p>
-      </footer>
-    </div>
-  </div>
+  <dialog id="reset-dialog" class="confirm-dialog" aria-labelledby="reset-title">
+    <form method="dialog">
+      <h2 id="reset-title">删除所有设置和 API Key？</h2>
+      <p>此操作无法撤销。所有服务商密钥、模型设置和语言偏好都会恢复为默认值。</p>
+      <div class="dialog-actions">
+        <button class="ghost-button" value="cancel">取消</button>
+        <button id="confirm-reset" class="danger-button" value="confirm">确认删除并重置</button>
+      </div>
+    </form>
+  </dialog>
 
   <script type="module" src="src/options/index.js"></script>
 </body>
-
 </html>

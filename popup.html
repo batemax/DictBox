@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DictBox</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body class="popup-surface">
+  <main class="popup-frame" aria-labelledby="popup-title">
+    <header class="popup-header">
+      <div class="brand">
+        <img class="brand-icon" src="icons/icon48.png" width="34" height="34" alt="">
+        <span id="popup-title" class="brand-name">DictBox</span>
+      </div>
+      <button id="open-settings" class="icon-button" type="button" aria-label="打开插件设置">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 15.25A3.25 3.25 0 1 0 12 8.75a3.25 3.25 0 0 0 0 6.5Z" stroke-width="1.7"/>
+          <path d="M19.2 13.2c.05-.4.05-.8 0-1.2l1.55-1.2-1.8-3.12-1.82.73a7.8 7.8 0 0 0-1.04-.6L15.8 5.88h-3.6l-.3 1.93c-.36.17-.7.37-1.03.6l-1.82-.73-1.8 3.12L8.8 12c-.05.4-.05.8 0 1.2l-1.55 1.2 1.8 3.12 1.82-.73c.33.23.67.43 1.04.6l.29 1.93h3.6l.3-1.93c.36-.17.7-.37 1.03-.6l1.82.73 1.8-3.12-1.55-1.2Z" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </header>
+    <div class="popup-body">
+      <form id="lookup-form" class="search-form">
+        <div class="field-wrap">
+          <label class="visually-hidden" for="lookup-input">输入单词或短语</label>
+          <input id="lookup-input" class="search-input" type="text" placeholder="输入单词或短语" autocomplete="off" spellcheck="false" maxlength="80">
+          <button id="clear-input" class="clear-input" type="button" aria-label="清空输入">×</button>
+        </div>
+        <button id="lookup-submit" class="primary-button" type="submit">查询</button>
+      </form>
+      <p class="query-tip">地址栏输入 <strong>db + 空格</strong> 也能快速查询</p>
+      <div id="lookup-status" aria-live="polite"></div>
+      <section class="history" aria-labelledby="history-title">
+        <div class="section-heading">
+          <h2 id="history-title">最近查询</h2>
+          <button id="clear-history" class="link-button" type="button">清除记录</button>
+        </div>
+        <div id="history-list" class="history-list"></div>
+        <div id="history-feedback" class="history-feedback" aria-live="polite"></div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="src/popup/index.js"></script>
+</body>
+</html>

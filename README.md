@@ -1,255 +1,104 @@
-<div align="center">
+# DictBox V3
 
-# 📖 DictBox
+DictBox 是一个 Manifest V3 浏览器查词扩展。它支持 Chrome 地址栏快速查询、工具栏弹窗、扩展内部完整释义页以及本地设置和最近查询。
 
-**Chrome 地址栏字典翻译插件 — 输入即译，无需切换页面**
+V3 默认使用无需 API Key 的免费查询服务，新用户安装后即可查词；也支持配置自己的模型 API 获取更丰富的词典结果。
 
-[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)](https://chrome.google.com/webstore)
-[![Manifest V3](https://img.shields.io/badge/Manifest-V3-34A853?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/mv3/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## 界面预览
 
-<img src="icons/icon128.png" width="96" alt="DictBox Icon">
+### 整体介绍
 
-**[English](#english)** · **[中文](#中文)**
+![DictBox 整体介绍](store-assets/chrome-web-store/01-overview-1280x800.png)
 
-</div>
+### Omnibox 地址栏查词
 
----
+![DictBox Omnibox 地址栏查词](store-assets/chrome-web-store/02-omnibox-1280x800.png)
 
-## 中文
+### 插件按钮查词
 
-### 🎬 快速开始
+![DictBox 插件按钮查词](store-assets/chrome-web-store/03-popup-1280x800.png)
 
-在 Chrome 地址栏中：
+## 功能
 
-```
-db hello
-```
+- 地址栏输入 `db`，按空格或 Tab 后输入单词，显示精简释义。
+- 按 Enter 打开扩展内部的完整释义页。
+- 点击工具栏图标，在 380px 弹窗内查询、复制、清空及重试。
+- 最近查询最多保留 5 条，仅保存在本地浏览器。
+- 设置页支持免费查询、OpenAI、Gemini、Claude、DeepSeek 和 OpenAI 兼容的自定义服务商。
+- API Key 存入 `storage.local`，普通设置存入 `storage.sync`。
+- 自动检测查询语言；输入中文且目标为中文时会自动切换到英语。
+- Chromium 与 Firefox 双目标构建。
 
-翻译结果立即显示在下拉列表中 — 无需打开新标签页，无需离开当前页面。
+## 本地开发
 
-### ✨ 功能特性
-
-| 功能 | 说明 |
-|------|------|
-| ⌨️ **Omnibox 快速翻译** | 地址栏输入 `db` + 空格 + 单词，即刻翻译 |
-| 🏷️ **词性标注** | 显示 adj. / n. / v. / adv. 等词性分类 |
-| 📋 **多义词展示** | 每个含义单独一行，按匹配度排序 |
-| 🌍 **智能语言检测** | 自动识别中日韩俄阿泰等语言 |
-| 🔄 **三大翻译引擎** | MyMemory（免费默认）/ Google / Microsoft Dictionary |
-| ⚡ **多级缓存** | 内存 LRU 200 条 + 本地持久化 500 条 |
-| 🛡️ **智能降级** | 主引擎失败自动切换 MyMemory |
-| ⏱️ **防抖优化** | 600ms 防抖 + 最少 2 字符触发 |
-
-### 📦 安装
-
-#### 从源码安装（开发模式）
-
-1. 下载或克隆本仓库
-   ```bash
-   git clone https://github.com/batemax/DictBox.git
-   ```
-2. 打开 Chrome，地址栏输入 `chrome://extensions`
-3. 开启右上角 **开发者模式** 开关
-4. 点击 **加载已解压的扩展程序**
-5. 选择 `DictBox` 项目文件夹
-6. 完成！在地址栏输入 `db` 试试吧 🎉
-
-### 🚀 使用方法
-
-<table>
-<tr>
-<td width="60">
-
-**步骤 1**
-
-</td>
-<td>
-
-在地址栏输入 `db`，按 `空格` 或 `Tab` 激活 DictBox 模式
-
-</td>
-</tr>
-<tr>
-<td>
-
-**步骤 2**
-
-</td>
-<td>
-
-输入要翻译的单词或短语，如 `beautiful`
-
-</td>
-</tr>
-<tr>
-<td>
-
-**步骤 3**
-
-</td>
-<td>
-
-翻译结果自动显示在下拉列表中，包含词性和多个释义
-
-</td>
-</tr>
-</table>
-
-> 💡 **提示**：输入中文（如 `你好`）会自动翻译为英文。当输入语言与目标语言相同时，自动切换为英文翻译。
-
-### ⚙️ 设置
-
-右键点击插件图标 → **选项**，可配置：
-
-- **翻译引擎** — MyMemory（免费，默认）/ Google Translate / Microsoft Dictionary
-- **API Key** — Google / Microsoft 引擎需要配置对应 API 密钥
-- **目标语言** — 支持中/英/日/韩/法/德/西/葡/俄等 13 种语言
-- **MyMemory Email** — 填写后免费额度从 5,000 提升至 50,000 字符/天
-
-### 🔌 翻译引擎对比
-
-| 引擎 | 免费额度 | 词性标注 | API Key |
-|------|---------|---------|---------|
-| **MyMemory** | 5K 字符/天（默认） | ⚠️ 有限 | 不需要 |
-| **Google Translate** | 按 API 计费 | ❌ 无 | 需要 |
-| **Microsoft Dictionary** | 2M 字符/月免费 | ✅ 完整 | 需要 |
-
-> 🎯 **推荐**：如需精确词性标注，建议配置 Microsoft Dictionary（Azure 免费额度每月 200 万字符）。
-
----
-
-## English
-
-### 🎬 Quick Start
-
-In Chrome's address bar:
-
-```
-db hello
-```
-
-Translation results appear instantly in the dropdown — no new tabs, no page switching.
-
-### ✨ Features
-
-- **⌨️ Omnibox Translation** — Type `db` + space + word in the address bar for instant translation
-- **🏷️ Part-of-Speech Tags** — Shows adj. / n. / v. / adv. classifications
-- **📋 Multiple Meanings** — Each definition on a separate line, sorted by relevance
-- **🌍 Smart Language Detection** — Auto-detects CJK, Cyrillic, Arabic, Thai, and more
-- **🔄 Three Translation Engines** — MyMemory (free, default) / Google / Microsoft Dictionary
-- **⚡ Multi-layer Caching** — In-memory LRU (200 entries) + persistent local cache (500 entries)
-- **🛡️ Auto Fallback** — Gracefully falls back to MyMemory if the primary engine fails
-- **⏱️ Debounce** — 600ms debounce + minimum 2-character input to reduce API calls
-
-### 📦 Installation
-
-#### From Source (Developer Mode)
-
-1. Clone this repository
-   ```bash
-   git clone https://github.com/batemax/DictBox.git
-   ```
-2. Open Chrome → navigate to `chrome://extensions`
-3. Enable **Developer mode** (top-right toggle)
-4. Click **Load unpacked**
-5. Select the `DictBox` folder
-6. Done! Type `db` in the address bar to get started 🎉
-
-### ⚙️ Configuration
-
-Right-click the extension icon → **Options** to configure:
-
-- **Translation Engine** — MyMemory (free, default) / Google Translate / Microsoft Dictionary
-- **API Keys** — Required for Google and Microsoft engines
-- **Target Language** — 13 languages supported (Chinese, English, Japanese, Korean, French, German, etc.)
-
-### 🔌 Engine Comparison
-
-| Engine | Free Tier | POS Tags | API Key |
-|--------|-----------|----------|---------|
-| **MyMemory** | 5K chars/day (default) | ⚠️ Limited | Not required |
-| **Google Translate** | Pay-per-use | ❌ None | Required |
-| **Microsoft Dictionary** | 2M chars/month free | ✅ Full | Required |
-
----
-
-## 📁 Project Structure
-
-```
-DictBox/
-├── manifest.json            # Chrome Extension Manifest V3
-├── background.js            # Service Worker — Omnibox, caching, language detection
-├── options.html             # Settings page
-├── options.css              # Settings page styles (dark glassmorphism theme)
-├── options.js               # Settings page logic
-├── providers/
-│   ├── index.js             # Provider factory with auto-fallback
-│   ├── mymemory.js          # MyMemory free translation API
-│   ├── google.js            # Google Cloud Translation API v2
-│   └── microsoft.js         # Microsoft Dictionary + Translator API
-└── icons/
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
-```
-
-## 🏗️ Architecture
-
-```
-User Input (db + word)
-        │
-        ▼
-   ┌─────────────┐     ┌──────────────┐
-   │   Omnibox    │────▶│  LRU Cache   │──▶ Cache Hit → Return
-   │  Listener    │     │  (200 items)  │
-   └─────────────┘     └──────────────┘
-        │                      │
-        │ (Cache Miss)         │
-        ▼                      │
-   ┌─────────────┐            │
-   │  Debounce   │            │
-   │   600ms     │            │
-   └─────────────┘            │
-        │                      │
-        ▼                      │
-   ┌─────────────┐            │
-   │  Provider   │            │
-   │  Factory    │            │
-   └─────────────┘            │
-        │                      │
-   ┌────┼────┐                │
-   ▼    ▼    ▼                │
-  MM  Google  MS              │
-   │    │     │               │
-   └────┼────┘                │
-        │                      │
-        ▼                      │
-   ┌─────────────┐            │
-   │  Format &   │────────────┘
-   │  Cache      │   (Write back)
-   └─────────────┘
-        │
-        ▼
-   Omnibox Suggestions
-```
-
-## 🔧 Development
-
-This is a pure JavaScript Chrome extension with no build step required.
+要求 Node.js 20 或更高版本。
 
 ```bash
-# Clone
-git clone https://github.com/batemax/DictBox.git
-
-# Load in Chrome
-# chrome://extensions → Developer mode → Load unpacked → select DictBox/
-
-# Debug
-# chrome://extensions → DictBox → "Service Worker" link → Console tab
+npm test
+npm run build:chromium
 ```
 
-## 📄 License
+构建产物位于 `dist/chromium`。
 
-[MIT](LICENSE) © 2026
+在 Chrome 中打开 `chrome://extensions`：
 
+1. 开启“开发者模式”。
+2. 点击“加载已解压的扩展程序”。
+3. 选择本仓库的 `dist/chromium` 目录。
+4. 点击 DictBox 工具栏图标，无需配置即可查询 `world`。
+5. 在地址栏输入 `db world`，确认建议出现并按 Enter 打开完整释义页。
+
+源目录本身也包含完整 Manifest 和页面，但推荐加载构建产物，以验证实际发布内容。
+
+## 常用命令
+
+```bash
+npm test             # 单元测试和 Chrome API 集成测试
+npm run build        # 构建 Chromium 与 Firefox
+npm run check        # 测试后构建两个目标
+```
+
+## 项目结构
+
+```text
+DictBox/
+├── popup.html                  # 工具栏查词弹窗
+├── result.html                 # 完整释义页
+├── options.html                # 设置页
+├── options.css                 # Open Design 视觉系统与页面样式
+├── manifests/                  # 基础及浏览器差异 Manifest
+├── src/
+│   ├── background/             # Omnibox、消息路由、结果页跳转
+│   ├── core/                   # 查询服务、结果规范化、展示模型
+│   ├── infrastructure/         # 缓存、设置、最近查询
+│   ├── popup/                  # 弹窗交互
+│   ├── result/                 # 完整释义页交互
+│   ├── options/                # 设置页交互
+│   ├── providers/              # Mock 与真实服务商适配层
+│   └── ui/                     # 安全 DOM 渲染
+├── scripts/build.mjs
+└── test/
+```
+
+## 免费查询与模型服务
+
+- 新安装默认使用 MyMemory 免费查询，无需注册或填写 API Key。
+- 模型服务需要 API Key，并可在高级设置中修改模型名称和 API 地址。
+- 自定义服务只申请用户填写域名的最小主机权限。
+- Mock Provider 仅保留给自动化测试，不在发布界面中提供开关。
+
+## 安全与隐私
+
+- 外部结果经过结构校验或规范化后才进入 UI。
+- 结果通过 DOM `textContent` 渲染，不直接插入外部 HTML。
+- API Key 默认遮罩，不进入 URL、日志或用户可见错误消息。
+- DictBox 不提供账号或云端历史；最近查询仅保存在本地。
+- 查询文本会发送到用户选择的服务商；API Key 仅保存在当前设备。
+
+## 设计依据
+
+V3 的弹窗、完整释义页、设置页、状态反馈和视觉令牌来自 Open Design 中的 `DictBox` 项目。实现对照记录见 [V3_IMPLEMENTATION.md](docs/V3_IMPLEMENTATION.md)。
+
+## License
+
+[MIT](LICENSE)

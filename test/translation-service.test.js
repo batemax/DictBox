@@ -26,7 +26,11 @@ test('returns a completed lookup without waiting for persistent cache writes', a
     }),
   ]);
 
-  assert.deepEqual(result, expected);
+  assert.deepEqual(result.translations, expected.translations);
+  assert.equal(result.word, 'honey');
+  assert.equal(result.provider, 'deepseek');
+  assert.equal(result.sourceLanguage, 'auto');
+  assert.equal(result.targetLanguage, 'zh-CN');
 });
 
 test('does not cache fallback results under the primary provider key', async () => {
